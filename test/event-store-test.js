@@ -3,8 +3,8 @@ const axios = require('axios')
 
 const eventStore = new XEventStore({
   state: {
-    name: "why",
-    friends: ["abc", "cba", "nba"],
+    name: "x",
+    datas: ["a", "b", "c"],
     banners: [],
     recommends: []
   },
@@ -40,14 +40,14 @@ eventStore.onState("recommends", (value) => {
 })
 
 // 同时监听多个数据
-eventStore.onStates(["name", "friends"], (value) => {
+eventStore.onStates(["name", "datas"], (value) => {
   console.log("监听多个数据:", value) // 数组类型
 })
 
 // 数据变化
 setTimeout(() => {
-  eventStore.setState("name", "lilei")
-  eventStore.setState("friends", ["kobe", "james"])
+  eventStore.setState("name", "y")
+  eventStore.setState("datas", ["d", "e"])
 }, 1000);
 
 // eventStore.dispatch("getHomeMultidata")

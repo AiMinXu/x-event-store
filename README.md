@@ -1,7 +1,6 @@
-# hy-event-store
-An event-based global state management tool for vue, react, mini-program, etc.
+# x-event-store
 
-一个基于事件的全局状态管理工具，可以在Vue、React、小程序等任何地方使用。
+一个基于事件总线的全局状态管理工具，可以适用于Vue、React、小程序等。
 
 
 
@@ -11,17 +10,16 @@ An event-based global state management tool for vue, react, mini-program, etc.
 
 在项目中找到一个更加方便快捷的数据共享方案：
 
-* 后续会完善文档和增加更多好用功能；
 * 欢迎star、issue、pull requests，会进行更多改变；
 
 
 
-# 如何使用呢？
+# 怎样使用：
 
 ## 1、npm安装依赖
 
 ```shell
-npm install hy-event-store
+npm install x-event-store
 ```
 
 
@@ -29,59 +27,60 @@ npm install hy-event-store
 ## 2、事件总线（event-bus）
 
 ```js
-const { HYEventBus } = require('hy-event-store')
+const { XEventBus } = require('../src')
 
-const eventBus = new HYEventBus()
+const eventBus = new XEventBus()
 
-const whyCallback1 = (...payload) => {
-  console.log("whyCallback1:", payload)
+const xCallback1 = (...args) => {
+  console.log("xCallback1:", args)
 }
 
-const whyCallback2 = (...payload) => {
-  console.log("whyCallback1:", payload)
+const xCallback2 = (...args) => {
+  console.log("xCallback2:", args)
 }
 
-const lileiCallback1 = (...payload) => {
-  console.log("lileiCallback1:", payload)
+const yCallback1 = (...args) => {
+  console.log("yCallback1:", args)
 }
 
-eventBus.on("why", whyCallback1)
-eventBus.on("why", whyCallback2)
-eventBus.on('lilei', lileiCallback1)
-eventBus.once("why", (...payload) => {
-  console.log("why once:", payload)
+eventBus.on("x", xCallback1)
+eventBus.on("x", xCallback2)
+eventBus.on('y', yCallback1)
+eventBus.once("x", (...args) => {
+  console.log("x once:", args)
 })
 
 setTimeout(() => {
-  eventBus.emit("why", "abc", "cba", "nba")
-  eventBus.emit("lilei", "abc", "cba", "nba")
+  eventBus.emit("x", "a", "b", "c")
+  eventBus.emit("y", "a", "b", "c")
 }, 1000);
 
 setTimeout(() => {
-  eventBus.off("why", whyCallback1)
-  eventBus.off("lilei", lileiCallback1)
+  eventBus.off("x", xCallback1)
+  eventBus.off("y", yCallback1)
 }, 2000);
 
 setTimeout(() => {
-  eventBus.emit("why")
-  eventBus.emit("lilei")
+  eventBus.emit("x")
+  eventBus.emit("y")
 }, 3000);
+
 ```
 
 
 
 
 
-## 3、数据共享（event-store）
+## 3、状态管理（event-store）
 
 ```js
-const { HYEventStore } = require("hy-event-store")
+const { XEventStore } = require("../src")
 const axios = require('axios')
 
-const eventStore = new HYEventStore({
+const eventStore = new XEventStore({
   state: {
-    name: "why",
-    friends: ["abc", "cba", "nba"],
+    name: "x",
+    datas: ["a", "b", "c"],
     banners: [],
     recommends: []
   },
@@ -99,15 +98,6 @@ const eventStore = new HYEventStore({
   }
 })
 
-// 数据监听
-eventStore.onState("name", (value) => {
-  console.log("监听name:", value)
-})
-
-eventStore.onState("friends", (value) => {
-  console.log("监听friends:", value)
-})
-
 eventStore.onState("banners", (value) => {
   console.log("监听banners:", value)
 })
@@ -116,14 +106,15 @@ eventStore.onState("recommends", (value) => {
   console.log("监听recommends", value)
 })
 
+// 同时监听多个数据
+eventStore.onStates(["name", "datas"], (value) => {
+  console.log("监听多个数据:", value) // 数组类型
+})
+
 // 数据变化
 setTimeout(() => {
-  eventStore.setState("name", "lilei")
-  eventStore.setState("friends", ["kobe", "james"])
+  eventStore.setState("name", "y")
+  eventStore.setState("datas", ["d", "e"])
 }, 1000);
 
-eventStore.dispatch("getHomeMultidata")
 ```
-
-
-

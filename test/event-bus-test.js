@@ -2,36 +2,36 @@ const { XEventBus } = require('../src')
 
 const eventBus = new XEventBus()
 
-const whyCallback1 = (...payload) => {
-  console.log("whyCallback1:", payload)
+const xCallback1 = (...args) => {
+  console.log("xCallback1:", args)
 }
 
-const whyCallback2 = (...payload) => {
-  console.log("whyCallback2:", payload)
+const xCallback2 = (...args) => {
+  console.log("xCallback2:", args)
 }
 
-const lileiCallback1 = (...payload) => {
-  console.log("lileiCallback1:", payload)
+const yCallback1 = (...args) => {
+  console.log("yCallback1:", args)
 }
 
-eventBus.on("why", whyCallback1)
-eventBus.on("why", whyCallback2)
-eventBus.on('lilei', lileiCallback1)
-eventBus.once("why", (...payload) => {
-  console.log("why once:", payload)
+eventBus.on("x", xCallback1)
+eventBus.on("x", xCallback2)
+eventBus.on('y', yCallback1)
+eventBus.once("x", (...args) => {
+  console.log("x once:", args)
 })
 
 setTimeout(() => {
-  eventBus.emit("why", "abc", "cba", "nba")
-  eventBus.emit("lilei", "abc", "cba", "nba")
+  eventBus.emit("x", "a", "b", "c")
+  eventBus.emit("y", "a", "b", "c")
 }, 1000);
 
 setTimeout(() => {
-  eventBus.off("why", whyCallback1)
-  eventBus.off("lilei", lileiCallback1)
+  eventBus.off("x", xCallback1)
+  eventBus.off("y", yCallback1)
 }, 2000);
 
 setTimeout(() => {
-  eventBus.emit("why")
-  eventBus.emit("lilei")
+  eventBus.emit("x")
+  eventBus.emit("y")
 }, 3000);
